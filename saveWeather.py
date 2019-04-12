@@ -5,7 +5,6 @@ import datetime
 import sys
 from dotenv import load_dotenv
 import os
-from urllib2 import urlopen
 
 load_dotenv(".env")
 
@@ -16,11 +15,13 @@ else:
 
 
 url = 'http://ipinfo.io/json'
-ipInfo=json.load(urlopen(url))
+ipInfo=requests.get("https://ipinfo.io").json()
+
 
 apiKey=os.environ["APIKEY"]
 lat=ipInfo["loc"].split(",")[0].strip()
 lon=ipInfo["loc"].split(",")[1].strip()
+print ipInfo["city"], lat, lon
 
 now = datetime.datetime.now()
 client=pymongo.MongoClient()
@@ -36,6 +37,7 @@ currentResult['day']=now.day
 currentResult['rating']=rating
 
 collection.insert_one(currentResult)
+print "saved"
 # print result.keys()
 # print json.dumps(currentResult, indent=4)
 
