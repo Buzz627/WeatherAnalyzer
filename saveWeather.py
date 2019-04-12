@@ -5,6 +5,7 @@ import datetime
 import sys
 from dotenv import load_dotenv
 import os
+from urllib2 import urlopen
 
 load_dotenv(".env")
 
@@ -13,13 +14,19 @@ if len(sys.argv) > 1:
 else:
 	rating=int(raw_input("enter rating: "))
 
-# print rating
+
+url = 'http://ipinfo.io/json'
+ipInfo=json.load(urlopen(url))
+
+apiKey=os.environ["APIKEY"]
+lat=ipInfo["loc"].split(",")[0].strip()
+lon=ipInfo["loc"].split(",")[1].strip()
 
 now = datetime.datetime.now()
 client=pymongo.MongoClient()
 db = client.weather
 collection = db.conditions
-r = requests.get('https://api.darksky.net/forecast/{e[APIKEY]}/{e[LAT]},{e[LON]}?exclude=hourly,minutely,daily'.format(e=os.environ))
+r = requests.get('https://api.darksky.net/forecast/{}/{},{}?exclude=hourly,minutely,daily'.format(apiKey, lat, lon))
 result=r.json()
 currentResult=result['currently']
 currentResult['hour']=now.hour
