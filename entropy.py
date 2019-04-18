@@ -2,6 +2,7 @@ import pymongo
 import json
 import math
 
+
 def normilize(data, fields=[]):
 	normilizedData=map(lambda x: {"rating":x["rating"]}, data)
 	if fields==[]:
@@ -19,6 +20,10 @@ def normilize(data, fields=[]):
 			
 		except KeyError:
 			print ">>>>>>> key error: "+ k
+			
+		except TypeError, e: 
+			for i in range(len(data)):
+				normilizedData[i][k]=data[i][k]
 		
 	return normilizedData
 
@@ -136,19 +141,20 @@ if __name__=="__main__":
 
 
 	infoGain=[]
+	classification="rating"
 
 	for field in fields:
-		infoGain.append((field, informationGain(data, field, "rating")))
+		infoGain.append((field, informationGain(data, field, classification)))
 
 	infoGain.sort(key = lambda x: x[1])
 	for i in infoGain:
 		print i
 	# print getTop(data,fields, 2)
-	normalData=normilize(data, fields)
+	normalData=normilize(data)
 	print "\n\nnormal"
 	infoGain=[]
 	for field in fields:
-		infoGain.append((field, informationGain(normalData, field, "rating")))
+		infoGain.append((field, informationGain(normalData, field, classification)))
 
 	infoGain.sort(key = lambda x: x[1])
 	for i in infoGain:
