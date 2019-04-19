@@ -3,8 +3,8 @@ import json
 import math
 
 
-def normilize(data, fields=[]):
-	normilizedData=map(lambda x: {"rating":x["rating"]}, data)
+def normilize(data, classification, fields=[]):
+	normilizedData=map(lambda x: {classification:x[classification]}, data)
 	if fields==[]:
 		keys=data[0].keys()
 	else:
@@ -142,6 +142,7 @@ if __name__=="__main__":
 
 	infoGain=[]
 	classification="rating"
+	classification="summary"
 
 	for field in fields:
 		infoGain.append((field, informationGain(data, field, classification)))
@@ -150,7 +151,7 @@ if __name__=="__main__":
 	for i in infoGain:
 		print i
 	# print getTop(data,fields, 2)
-	normalData=normilize(data)
+	normalData=normilize(data, classification)
 	print "\n\nnormal"
 	infoGain=[]
 	for field in fields:
@@ -175,17 +176,5 @@ if __name__=="__main__":
 
 	# print informationGain(data, entropyField, "rating")
 
-
-
-
-
-
-
-
-
-
-
-
-# print json.dumps(data)
 
 
