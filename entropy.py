@@ -142,7 +142,7 @@ if __name__=="__main__":
 
 	infoGain=[]
 	classification="rating"
-	classification="summary"
+	# classification="summary"
 
 	for field in fields:
 		infoGain.append((field, informationGain(data, field, classification)))
