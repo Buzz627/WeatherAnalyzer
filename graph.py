@@ -24,7 +24,7 @@ for r in sorted(colors.keys()):
 		plt.plot(x,y, 'o',color=colors[r], label=r if i==0 else "")
 		i+=1
 plt.legend(loc='upper center', bbox_to_anchor=(1.06, 1))
-plt.xlabel(xCollection.capitalize() +" (mbar)")
-plt.ylabel(yCollection.capitalize() +" (deg F)")
+plt.xlabel(xCollection.capitalize() +" (deg F)")
+plt.ylabel(yCollection.capitalize() +" (mbar)")
 plt.title("Weather ratings "+xCollection.capitalize()+" vs "+yCollection.capitalize())
 plt.show()
