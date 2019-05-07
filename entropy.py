@@ -4,7 +4,7 @@ import math
 
 
 def normilize(data, classification, fields=[]):
-	normilizedData=map(lambda x: {classification:x[classification]}, data)
+	normilizedData=list(map(lambda x: {classification:x[classification]}, data))
 	if fields==[]:
 		keys=data[0].keys()
 	else:
@@ -19,9 +19,9 @@ def normilize(data, classification, fields=[]):
 
 			
 		except KeyError:
-			print ">>>>>>> key error: "+ k
+			print(">>>>>>> key error: "+ k)
 			
-		except TypeError, e: 
+		except TypeError as e: 
 			for i in range(len(data)):
 				normilizedData[i][k]=data[i][k]
 		
@@ -50,7 +50,7 @@ def makeBuckets(data, field, num):
 	for i in range(num):
 		low= i*bucketLen+lowest
 		high=(i+1)*bucketLen+lowest
-		b=filter(lambda x: x[field] < high and x[field] >= low,data)
+		b=list(filter(lambda x: x[field] < high and x[field] >= low,data))
 		buckets.append(b)
 	# buckets[num-1].extend(filter(lambda x: x[field] == high,data))
 
@@ -149,17 +149,17 @@ if __name__=="__main__":
 
 	infoGain.sort(key = lambda x: x[1])
 	for i in infoGain:
-		print i
+		print(i)
 	# print getTop(data,fields, 2)
 	normalData=normilize(data, classification)
-	print "\n\nnormal"
+	print("\n\nnormal")
 	infoGain=[]
 	for field in fields:
 		infoGain.append((field, informationGain(normalData, field, classification)))
 
 	infoGain.sort(key = lambda x: x[1])
 	for i in infoGain:
-		print i
+		print(i)
 
 
 
