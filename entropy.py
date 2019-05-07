@@ -1,3 +1,4 @@
+from __future__ import division
 import pymongo
 import json
 import math
@@ -12,8 +13,8 @@ def normilize(data, classification, fields=[]):
 
 	for k in keys:
 		try:
-			avg=average(map(lambda x: x[k], data))
-			sig=sigma(map(lambda x: x[k], data))
+			avg=average(list(map(lambda x: x[k], data)))
+			sig=sigma(list(map(lambda x: x[k], data)))
 			for i in range(len(data)):
 				normilizedData[i][k]=(data[i][k]-avg)/float(sig)
 
@@ -22,6 +23,7 @@ def normilize(data, classification, fields=[]):
 			print(">>>>>>> key error: "+ k)
 			
 		except TypeError as e: 
+			# print(e)
 			for i in range(len(data)):
 				normilizedData[i][k]=data[i][k]
 		
