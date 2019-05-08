@@ -21,7 +21,7 @@ ipInfo=requests.get("https://ipinfo.io").json()
 apiKey=os.environ["APIKEY"]
 lat=ipInfo["loc"].split(",")[0].strip()
 lon=ipInfo["loc"].split(",")[1].strip()
-print ipInfo["city"], lat, lon
+print(ipInfo["city"], lat, lon)
 
 now = datetime.datetime.now()
 client=pymongo.MongoClient()
@@ -37,7 +37,7 @@ currentResult['day']=now.day
 currentResult['rating']=rating
 
 collection.insert_one(currentResult)
-print "saved"
+print("saved")
 # print result.keys()
 # print json.dumps(currentResult, indent=4)
 
