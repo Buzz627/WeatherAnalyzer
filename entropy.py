@@ -2,6 +2,7 @@ from __future__ import division
 import pymongo
 import json
 import math
+from dataFunctions import *
 
 
 def normilize(data, classification, fields=[]):
@@ -29,16 +30,6 @@ def normilize(data, classification, fields=[]):
 		
 	return normilizedData
 
-def average(lst):
-	try:
-		return math.fsum(lst)/len(lst)
-	except: 
-		return 0 
-def sigma(lst):
-	avg=average(lst)
-	squares=map(lambda x: math.pow(x-avg, 2), lst) 
-	meanSquares=math.fsum(squares)/len(lst)
-	return math.sqrt(meanSquares)
 
 
 def makeBuckets(data, field, num):
