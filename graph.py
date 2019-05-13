@@ -12,7 +12,7 @@ yCollection="pressure"
 conn=Connection()
 for r in sorted(colors.keys()):
 
-	data=conn.findData()({"rating":int(r)}, {xCollection:1, yCollection:1, "precipProbability":1})
+	data=conn.findData({"rating":int(r)}, {xCollection:1, yCollection:1, "precipProbability":1})
 	x=[] 
 	y=[]
 	i=0

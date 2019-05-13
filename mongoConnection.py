@@ -10,8 +10,8 @@ class Connection:
 		result=self.collection.find({})
 		return result
 
-	def findData(self):
-		result=self.collection.find
+	def findData(self, *query):
+		result=self.collection.find(*query)
 		return result
 	def insert_one(self, data):
 		self.collection.insert_one(data)
