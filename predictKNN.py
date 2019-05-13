@@ -1,16 +1,8 @@
 from __future__ import division
-import pymongo
-import json
-import math
 from weather import getCurrent
 from dataFunctions import average
+from mongoConnection import Connection
 
-def getData():
-	client=pymongo.MongoClient()
-	db = client.weather
-	collection = db.conditions
-	results=list(collection.find({}))
-	return results
 
 def getDistance(point1, point2):
 	skip=["time", "rating"]
@@ -51,7 +43,8 @@ if __name__=="__main__":
 		'icon': 'cloudy'
 	}
 	current=getCurrent()
-	data=getData()
+	conn=Connection()
+	data=conn.getAllData()
 	distances=[]
 	for d in data:
 		distances.append((getDistance(current, d), d))

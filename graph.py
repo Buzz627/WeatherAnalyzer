@@ -1,20 +1,18 @@
 import matplotlib.pyplot as plt
-import pymongo
+from mongoConnection import Connection
 import json
 
 
-client=pymongo.MongoClient()
-db = client.weather
-collection = db.conditions
+
 colors={"1":"r", "2":"#FFA500", "3":"#FFFF00", "4":"b", "5":"#00FF00"}
 # print colors
 
 xCollection="temperature"
 yCollection="pressure"
-
+conn=Connection()
 for r in sorted(colors.keys()):
 
-	data=collection.find({"rating":int(r)}, {xCollection:1, yCollection:1, "precipProbability":1})
+	data=conn.findData()({"rating":int(r)}, {xCollection:1, yCollection:1, "precipProbability":1})
 	x=[] 
 	y=[]
 	i=0
