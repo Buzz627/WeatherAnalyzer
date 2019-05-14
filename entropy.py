@@ -1,5 +1,4 @@
 from __future__ import division
-import pymongo
 import json
 import math
 from dataFunctions import *

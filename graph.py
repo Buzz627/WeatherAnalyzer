@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from mongoConnection import Connection
-import json
 
 
 
