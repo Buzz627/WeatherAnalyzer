@@ -1,7 +1,8 @@
 from __future__ import division
 from weather import getCurrent
-from dataFunctions import average
+from dataFunctions import average, standardize
 from mongoConnection import Connection
+import json
 
 
 def getDistance(point1, point2):
@@ -44,13 +45,26 @@ if __name__=="__main__":
 	}
 	current=getCurrent()
 	conn=Connection()
-	data=conn.getAllData()
+	data=list(conn.getAllData())
 	distances=[]
 	for d in data:
 		distances.append((getDistance(current, d), d))
 	distances.sort()
 	k=5
-	# for i in range(len(distances)):
-	# 	print(distances[i][0], distances[i][1]["rating"])
+	for i in range(len(distances)):
+		print(distances[i][0], distances[i][1]["rating"])
+		# print(distances[i])
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+
+	# sData=standardize(data, "rating")
+	# print(sData[0])
+	# print(getDistance(current, sData[0]))
+	# distances=[]
+	# for d in sData:
+	# 	distances.append((getDistance(current, d), d))
+	# distances.sort()
+	# k=5
+	# for i in range(k):
+	# 	print(distances[i][0], distances[i][1]["rating"])
+	# print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
 

@@ -36,3 +36,27 @@ def normilize(data, classification, fields=[]):
 				normilizedData[i][k]=data[i][k]
 		
 	return normilizedData
+
+def standardize(data, classification, fields=[]):
+	standardData=list(map(lambda x: {classification:x[classification]}, data))
+	if fields==[]:
+		keys=data[0].keys()
+	else:
+		keys=fields
+
+	for k in keys:
+		try:
+			low=min(list(map(lambda x: x[k], data)))
+			high=max(list(map(lambda x: x[k], data)))
+			for i in range(len(data)):
+				if k != classification:
+					standardData[i][k]=(data[i][k]-low)/(high-low)
+		except KeyError:
+			print(">>>>>>> key error: "+ k)
+			
+		except TypeError as e: 
+			# print(e)
+			for i in range(len(data)):
+				standardData[i][k]=data[i][k]
+
+	return standardData
