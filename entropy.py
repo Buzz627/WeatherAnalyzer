@@ -112,11 +112,12 @@ if __name__=="__main__":
 	print("\n\nnormal")
 	infoGain=[]
 	for field in fields:
-		infoGain.append((field, informationGain(normalData, field, classification)))
+		infoGain.append((field, informationGain(normalData["data"], field, classification)))
 
 	infoGain.sort(key = lambda x: x[1])
 	for i in infoGain:
 		print(i)
+
 
 
 

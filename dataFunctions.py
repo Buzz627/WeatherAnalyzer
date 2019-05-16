@@ -12,6 +12,22 @@ def sigma(lst):
 	meanSquares=math.fsum(squares)/len(lst)
 	return math.sqrt(meanSquares)
 
+def normilizePoint(point, avg, sig):
+	newPoint={}
+	for key in point:
+		try:
+			newPoint[key]=(point[key]-avg[key])/sig[key]
+
+		except KeyError:
+			print(">>>>>>> key error: "+ key)
+			
+		# except TypeError as e: 
+		# 	# print(e)
+		# 	for i in range(len(data)):
+		# 		normilized[i][k]=data[i][k]
+	return newPoint
+
+
 def normilize(data, classification, fields=[]):
 	normilizedData=list(map(lambda x: {classification:x[classification]}, data))
 	if fields==[]:
@@ -19,10 +35,15 @@ def normilize(data, classification, fields=[]):
 	else:
 		keys=fields
 
+	metadata={"avg":{}, "sig":{}}
 	for k in keys:
+		if k==classification:
+			continue
 		try:
 			avg=average(list(map(lambda x: x[k], data)))
 			sig=sigma(list(map(lambda x: x[k], data)))
+			metadata["avg"][k]=avg
+			metadata["sig"][k]=sig
 			for i in range(len(data)):
 				normilizedData[i][k]=(data[i][k]-avg)/float(sig)
 
@@ -35,7 +56,23 @@ def normilize(data, classification, fields=[]):
 			for i in range(len(data)):
 				normilizedData[i][k]=data[i][k]
 		
-	return normilizedData
+	return {"data":normilizedData, **metadata}
+
+def standardizePoint(point, high, low):
+	newPoint={}
+	for key in point:
+		try:
+			newPoint[key]=(point[key]-low[key])/(high[key]-low[key])
+
+		except KeyError:
+			print(">>>>>>> key error: "+ key)
+			
+		except TypeError as e: 
+			pass
+		# 	# print(e)
+		# 	for i in range(len(data)):
+		# 		normilized[i][k]=data[i][k]
+	return newPoint
 
 def standardize(data, classification, fields=[]):
 	standardData=list(map(lambda x: {classification:x[classification]}, data))
@@ -43,11 +80,14 @@ def standardize(data, classification, fields=[]):
 		keys=data[0].keys()
 	else:
 		keys=fields
+	metadata={"high":{},"low":{}}
 
 	for k in keys:
 		try:
 			low=min(list(map(lambda x: x[k], data)))
 			high=max(list(map(lambda x: x[k], data)))
+			metadata["high"][k]=high
+			metadata["low"][k]=low
 			for i in range(len(data)):
 				if k != classification:
 					standardData[i][k]=(data[i][k]-low)/(high-low)
@@ -59,4 +99,4 @@ def standardize(data, classification, fields=[]):
 			for i in range(len(data)):
 				standardData[i][k]=data[i][k]
 
-	return standardData
+	return {"data":standardData, **metadata}
