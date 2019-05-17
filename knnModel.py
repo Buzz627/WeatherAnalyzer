@@ -18,9 +18,9 @@ def getDistance(point1, point2):
 	return total
 
 class Knn():
-	def __init__(self):
-		conn=Connection()
-		self.data=list(conn.getAllData())
+	def __init__(self, data, classification):
+		self.data=list(data)
+		self.classification=classification
 
 	def split(self, trainLimit):
 		index=int(len(self.data)*(trainLimit/100))
@@ -29,14 +29,14 @@ class Knn():
 		self.testingSet=shuffled[index:]
 
 	def train(self):
-		self.model=normalize(self.trainingSet, "rating")
+		self.model=normalize(self.trainingSet, self.classification)
 
 	def predict(self, point, k=5):
 		distances=[]
 		for d in self.model["data"]:
 			distances.append((getDistance(point, d), d))
 		distances.sort()
-		return average(list(map(lambda x: x[1]["rating"],distances[:k])))
+		return average(list(map(lambda x: x[1][self.classification],distances[:k])))
 
 	def test(self):
 		mat=[[0]*5 for _ in range(5)]
@@ -45,21 +45,20 @@ class Knn():
 			normalPoint=normalizePoint(point, self.model["avg"], self.model["sig"])
 			prediction=self.predict(normalPoint)
 			j=round(prediction)-1
-			i=point["rating"]-1
+			i=point[self.classification]-1
 			mat[i][j]+=1
 			print(point["rating"], prediction)
-			predictionLst.append((point["rating"], prediction))
+			predictionLst.append((point[self.classification], prediction))
 		for l in mat:
 			print(l)
 		print()
 		print(RMSE(predictionLst))
 
-			
 
-			
 
 if __name__=="__main__":
-	model=Knn()
+	conn=Connection()
+	model=Knn(conn.getAllData(), "rating")
 	for i in range(5):
 		model.split(90)
 		model.train()
