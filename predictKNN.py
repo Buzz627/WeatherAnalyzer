@@ -58,11 +58,11 @@ if __name__=="__main__":
 
 
 
-	nData=normilize(data, "rating")
-	currentNormailzed=normilizePoint(current, nData["avg"], nData["sig"])
+	nData=normalize(data, "rating")
+	currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
 	distances=[]
 	for d in nData["data"]:
-		distances.append((getDistance(currentNormailzed, d), d))
+		distances.append((getDistance(currentNormalized, d), d))
 	distances.sort()
 	k=5
 	for i in range(k*2):

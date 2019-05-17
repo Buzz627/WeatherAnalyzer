@@ -12,7 +12,7 @@ def sigma(lst):
 	meanSquares=math.fsum(squares)/len(lst)
 	return math.sqrt(meanSquares)
 
-def normilizePoint(point, avg, sig):
+def normalizePoint(point, avg, sig):
 	newPoint={}
 	for key in point:
 		try:
@@ -24,12 +24,12 @@ def normilizePoint(point, avg, sig):
 		# except TypeError as e: 
 		# 	# print(e)
 		# 	for i in range(len(data)):
-		# 		normilized[i][k]=data[i][k]
+		# 		normalized[i][k]=data[i][k]
 	return newPoint
 
 
-def normilize(data, classification, fields=[]):
-	normilizedData=list(map(lambda x: {classification:x[classification]}, data))
+def normalize(data, classification, fields=[]):
+	normalizedData=list(map(lambda x: {classification:x[classification]}, data))
 	if fields==[]:
 		keys=data[0].keys()
 	else:
@@ -45,7 +45,7 @@ def normilize(data, classification, fields=[]):
 			metadata["avg"][k]=avg
 			metadata["sig"][k]=sig
 			for i in range(len(data)):
-				normilizedData[i][k]=(data[i][k]-avg)/float(sig)
+				normalizedData[i][k]=(data[i][k]-avg)/float(sig)
 
 			
 		except KeyError:
@@ -54,9 +54,9 @@ def normilize(data, classification, fields=[]):
 		except TypeError as e: 
 			# print(e)
 			for i in range(len(data)):
-				normilizedData[i][k]=data[i][k]
+				normalizedData[i][k]=data[i][k]
 		
-	return {"data":normilizedData, **metadata}
+	return {"data":normalizedData, **metadata}
 
 def standardizePoint(point, high, low):
 	newPoint={}
@@ -71,7 +71,7 @@ def standardizePoint(point, high, low):
 			pass
 		# 	# print(e)
 		# 	for i in range(len(data)):
-		# 		normilized[i][k]=data[i][k]
+		# 		normalized[i][k]=data[i][k]
 	return newPoint
 
 def standardize(data, classification, fields=[]):

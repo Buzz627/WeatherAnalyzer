@@ -108,7 +108,7 @@ if __name__=="__main__":
 	for i in infoGain:
 		print(i)
 	# print getTop(data,fields, 2)
-	normalData=normilize(data, classification)
+	normalData=normalize(data, classification)
 	print("\n\nnormal")
 	infoGain=[]
 	for field in fields:
