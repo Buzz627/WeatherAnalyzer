@@ -5,12 +5,23 @@ def average(lst):
 		return math.fsum(lst)/len(lst)
 	except: 
 		return 0 
+def mode(lst):
+	return max(set(lst), key = lst.count)
 
 def sigma(lst):
 	avg=average(lst)
 	squares=map(lambda x: math.pow(x-avg, 2), lst) 
 	meanSquares=math.fsum(squares)/len(lst)
 	return math.sqrt(meanSquares)
+
+def round(num):
+	return int(num+0.5)
+
+def RMSE(lst):
+	totalDifferance=math.fsum(list(map(lambda x: x[0]-x[1], lst)))
+
+	return math.sqrt((totalDifferance**2)/len(lst))
+
 
 def normalizePoint(point, avg, sig):
 	newPoint={}
@@ -19,6 +30,7 @@ def normalizePoint(point, avg, sig):
 			newPoint[key]=(point[key]-avg[key])/sig[key]
 
 		except KeyError:
+			continue
 			print(">>>>>>> key error: "+ key)
 			
 		# except TypeError as e: 
