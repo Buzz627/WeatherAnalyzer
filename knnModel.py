@@ -63,3 +63,4 @@ if __name__=="__main__":
 		model.split(90)
 		model.train()
 		model.test()
+	# conn.close()
