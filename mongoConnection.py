@@ -1,8 +1,14 @@
 import pymongo
+from dotenv import load_dotenv
+import os
+
+load_dotenv(".env")
 
 class Connection:
 	def __init__(self):
-		client=pymongo.MongoClient()
+		mongoUser=os.environ["DB_USER"]
+		mongoPass=os.environ["DB_PASS"]
+		client=pymongo.MongoClient(username=mongoUser, password=mongoPass)
 		self.client=client
 		db = client.weather
 		self.collection = db.conditions
