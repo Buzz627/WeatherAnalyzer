@@ -66,7 +66,7 @@ if __name__=="__main__":
 	distances.sort()
 	k=5
 	for i in range(k*2):
-		print("{:.2f} {}".format(distances[i][0], distances[i][1]["rating"]))
+		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
 
 
@@ -78,5 +78,5 @@ if __name__=="__main__":
 	distances.sort()
 	k=5
 	for i in range(k*2):
-		print("{:.2f} {}".format(distances[i][0], distances[i][1]["rating"]))
+		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
