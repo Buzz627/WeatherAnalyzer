@@ -8,7 +8,10 @@ class Connection:
 	def __init__(self):
 		mongoUser=os.environ["DB_USER"]
 		mongoPass=os.environ["DB_PASS"]
-		client=pymongo.MongoClient(username=mongoUser, password=mongoPass)
+		if "DB_URL" in os.environ:
+			client=pymongo.MongoClient(os.environ["DB_URL"])
+		else:
+			client=pymongo.MongoClient(username=mongoUser, password=mongoPass)
 		self.client=client
 		db = client.weather
 		self.collection = db.conditions
@@ -28,6 +31,10 @@ class Connection:
 		self.client.close()
 		
 
-
+if __name__=="__main__":
+	conn=Connection()
+	data=conn.findData({"rating":4})
+	for d in data:
+		print(d)
 # c=Connection()
 # print(c.findData)
