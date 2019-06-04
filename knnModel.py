@@ -60,7 +60,7 @@ if __name__=="__main__":
 	conn=Connection()
 	model=Knn(conn.getAllData(), "rating")
 	for i in range(5):
-		model.split(90)
+		model.split(80)
 		model.train()
 		model.test()
 	# conn.close()
