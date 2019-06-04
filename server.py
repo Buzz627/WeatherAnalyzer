@@ -13,4 +13,5 @@ def locTest():
 	data = json.loads(request.data)
 	print(data)
 	print(data['latitude'])
-	return ""
+	# return "this is working"
+	return "https://google.com/maps/place/{d[latitude]},{d[longitude]}".format(d=data)
