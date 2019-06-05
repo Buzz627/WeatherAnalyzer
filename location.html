@@ -18,14 +18,17 @@ var x = document.getElementById("demo");
 function getLocation() {
 	alert("button clicked")
 	x.innerHTML="working"
-	
+
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(sendPosition);
+		x.innerHTML+="<br>does have location"
+		navigator.geolocation.getCurrentPosition(sendPosition, nope);
 	} else { 
 		x.innerHTML = "Geolocation is not supported by this browser.";
 	}
 }
-
+function nope(err){
+	x.innerHTML+="<br>"+err
+}
 function sendPosition(position) {
 	
 
@@ -50,7 +53,7 @@ function sendPosition(position) {
 }
 
 $.ajax(settings).done(function (response) {
-	x.innerHTML = "Latitude: " + position.coords.latitude + 
+	x.innerHTML += "<br>Latitude: " + position.coords.latitude + 
 	"<br>Longitude: " + position.coords.longitude + 
 	"<br><a href="+response +">"+ response+"</a>";
   console.log(response);
