@@ -17,6 +17,8 @@ var x = document.getElementById("demo");
 
 function getLocation() {
 	alert("button clicked")
+	x.innerHTML="working"
+	
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(sendPosition);
 	} else { 
@@ -33,7 +35,7 @@ function sendPosition(position) {
 	// xhr.setRequestHeader("Content-Type", "application/json");
 
 	// xhr.send(JSON.stringify({"latitude":position.coords.latitude, "longitude": position.coords.longitude}));
-	x.innerHTML="working"
+	
 	var data={"latitude":position.coords.latitude, "longitude": position.coords.longitude}
 	var settings = {
   "async": true,
