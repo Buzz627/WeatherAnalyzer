@@ -7,55 +7,59 @@
 
 <p>Click the button to get your coordinates. foo</p>
 
-<button onclick="getLocation()" style="z-index: 99; color:red;">Try It</button>
+<button id="but">Try It</button>
 
 <p id="demo"></p>
 
 <script>
-var x = document.getElementById("demo");
+	$(document).ready(function() { // better to use $(document).ready(function(){
+	    $('#but').on('click touchstart', getLocation);
+	});
+
+	var x = document.getElementById("demo");
 
 
-function getLocation() {
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(sendPosition);
-	} else { 
-		x.innerHTML = "Geolocation is not supported by this browser.";
+	function getLocation() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(sendPosition);
+		} else { 
+			x.innerHTML = "Geolocation is not supported by this browser.";
+		}
 	}
-}
 
-function sendPosition(position) {
-	
+	function sendPosition(position) {
+		
 
-	// var xhr = new XMLHttpRequest();
+		// var xhr = new XMLHttpRequest();
 
-	// xhr.open("POST", "http://localhost:8000/locationTest");
-	// xhr.setRequestHeader("Content-Type", "application/json");
+		// xhr.open("POST", "http://localhost:8000/locationTest");
+		// xhr.setRequestHeader("Content-Type", "application/json");
 
-	// xhr.send(JSON.stringify({"latitude":position.coords.latitude, "longitude": position.coords.longitude}));
-	x.innerHTML="working"
-	var data={"latitude":position.coords.latitude, "longitude": position.coords.longitude}
-	var settings = {
-  "async": true,
-  "url": "/locationTest",
-  "method": "POST",
-  "headers": {
-    "Content-Type": "application/json",
+		// xhr.send(JSON.stringify({"latitude":position.coords.latitude, "longitude": position.coords.longitude}));
+		x.innerHTML="working"
+		var data={"latitude":position.coords.latitude, "longitude": position.coords.longitude}
+		var settings = {
+	  "async": true,
+	  "url": "/locationTest",
+	  "method": "POST",
+	  "headers": {
+	    "Content-Type": "application/json",
 
-  },
-  "processData": false,
-  "data": JSON.stringify(data)
-}
+	  },
+	  "processData": false,
+	  "data": JSON.stringify(data)
+	}
 
-$.ajax(settings).done(function (response) {
-	x.innerHTML = "Latitude: " + position.coords.latitude + 
-	"<br>Longitude: " + position.coords.longitude + 
-	"<br><a href="+response +">"+ response+"</a>";
-  console.log(response);
-});
-
+	$.ajax(settings).done(function (response) {
+		x.innerHTML = "Latitude: " + position.coords.latitude + 
+		"<br>Longitude: " + position.coords.longitude + 
+		"<br><a href="+response +">"+ response+"</a>";
+	  console.log(response);
+	});
 
 
-}
+
+	}
 </script>
 
 </body>
