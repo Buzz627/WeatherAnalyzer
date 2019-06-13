@@ -22,7 +22,8 @@ def locTest():
 @app.route("/rateWeather", methods=['POST'])
 def rate():
 	data = request.json
-	return json.dumps(data, indent=4)
+	save(data["num"], data)
+	return "saved"
 
 
 @app.route("/current", methods=['POST'])

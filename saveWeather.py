@@ -19,6 +19,7 @@ def save(rating, loc=None):
 	currentResult['rating']=rating
 	conn=Connection()
 	conn.insert_one(currentResult)
+	# print(currentResult)
 	print("saved")
 
 
