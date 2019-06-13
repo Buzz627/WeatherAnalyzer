@@ -6,11 +6,11 @@ load_dotenv(".env")
 
 class Connection:
 	def __init__(self):
-		mongoUser=os.environ["DB_USER"]
-		mongoPass=os.environ["DB_PASS"]
 		if "DB_URL" in os.environ:
 			client=pymongo.MongoClient(os.environ["DB_URL"])
 		else:
+			mongoUser=os.environ["DB_USER"]
+			mongoPass=os.environ["DB_PASS"]
 			client=pymongo.MongoClient(username=mongoUser, password=mongoPass)
 		self.client=client
 		db = client.weather
