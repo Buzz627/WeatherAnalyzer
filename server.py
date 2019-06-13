@@ -14,4 +14,23 @@ def locTest():
 	print(data)
 	print(data['latitude'])
 	# return "this is working"
-	return "https://google.com/maps/place/{d[latitude]},{d[longitude]}".format(d=data)
+	return "<a href='https://google.com/maps/place/{d[latitude]},{d[longitude]}'>test</a>".format(d=data)
+
+@app.route("/rateWeather", methods=['POST'])
+def rate():
+	data = json.loads(request.data)
+	return json.dumps(data, indent=4)
+
+
+@app.route("/current", methods=['POST'])
+def current():
+	data = json.loads(request.data)
+	data["path"]="current"
+	return json.dumps(data, indent=4)
+
+
+@app.route("/predict", methods=['POST'])
+def predict():
+	data = json.loads(request.data)
+	data["path"]="predict"
+	return json.dumps(data, indent=4)
