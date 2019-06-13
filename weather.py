@@ -11,16 +11,20 @@ def getLocation():
 	return ipInfo
 
 
-def getForcast():
-	ipInfo=getLocation()
+def getForcast(loc):
 
 	apiKey=os.environ["APIKEY"]
-	lat=ipInfo["loc"].split(",")[0].strip()
-	lon=ipInfo["loc"].split(",")[1].strip()
-	print(ipInfo["city"], lat, lon)
+	lat=loc["latitude"]
+	lon=loc["longitude"]
+	print( lat, lon)
 	r = requests.get('https://api.darksky.net/forecast/{}/{},{}?exclude=hourly,minutely,daily'.format(apiKey, lat, lon))
 	result=r.json()
 	return result
 
-def getCurrent():
-	return getForcast()["currently"]
+def getCurrent(loc=None):
+	if loc==None:
+		ipInfo=getLocation()
+		print(ipInfo["city"])
+		loc={"latitude":ipInfo["loc"].split(",")[0].strip(), "longitude": ipInfo["loc"].split(",")[1].strip() }
+
+	return getForcast(loc)["currently"]

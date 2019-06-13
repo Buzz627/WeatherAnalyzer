@@ -19,6 +19,22 @@ def getDistance(point1, point2):
 			print(e, "for key", key)
 	return total
 
+def predict(pos):
+	current=getCurrent(pos)
+	conn=Connection()
+	data=list(conn.getAllData())
+	nData=normalize(data, "rating")
+	currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
+	distances=[]
+	for d in nData["data"]:
+		distances.append((getDistance(currentNormalized, d), d))
+	distances.sort()
+	k=5
+	output=""
+	for i in range(k*2):
+		output+="{:.2f} {} {}\n".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"])
+	output+="prediction: {}\n".format(average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+	return output
 
 
 

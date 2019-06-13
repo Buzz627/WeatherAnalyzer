@@ -7,18 +7,11 @@ import os
 from weather import getCurrent
 from mongoConnection import Connection
 
-if  __name__=="__main__":
-	if len(sys.argv) > 1:
-		rating=int(sys.argv[1])
-	else:
-		rating=int(raw_input("enter rating: "))
-
-
-
+def save(rating, loc=None):
 	now = datetime.datetime.now()
 
 
-	currentResult=getCurrent()
+	currentResult=getCurrent(loc)
 	currentResult['hour']=now.hour
 	currentResult['month']=now.month
 	currentResult['day']=now.day
@@ -27,6 +20,17 @@ if  __name__=="__main__":
 	conn=Connection()
 	conn.insert_one(currentResult)
 	print("saved")
+
+
+if  __name__=="__main__":
+	if len(sys.argv) > 1:
+		rating=int(sys.argv[1])
+	else:
+		rating=int(raw_input("enter rating: "))
+
+	save(rating)
+
+	
 
 
 
