@@ -28,7 +28,7 @@ def predict(pos):
 	distances=[]
 	for d in nData["data"]:
 		distances.append((getDistance(currentNormalized, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	output=""
 	for i in range(k*2):
