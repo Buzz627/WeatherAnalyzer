@@ -1,44 +1,9 @@
 from __future__ import division
-import pymongo
 import json
 import math
+from dataFunctions import *
+from mongoConnection import Connection
 
-
-def normilize(data, classification, fields=[]):
-	normilizedData=list(map(lambda x: {classification:x[classification]}, data))
-	if fields==[]:
-		keys=data[0].keys()
-	else:
-		keys=fields
-
-	for k in keys:
-		try:
-			avg=average(list(map(lambda x: x[k], data)))
-			sig=sigma(list(map(lambda x: x[k], data)))
-			for i in range(len(data)):
-				normilizedData[i][k]=(data[i][k]-avg)/float(sig)
-
-			
-		except KeyError:
-			print(">>>>>>> key error: "+ k)
-			
-		except TypeError as e: 
-			# print(e)
-			for i in range(len(data)):
-				normilizedData[i][k]=data[i][k]
-		
-	return normilizedData
-
-def average(lst):
-	try:
-		return math.fsum(lst)/len(lst)
-	except: 
-		return 0 
-def sigma(lst):
-	avg=average(lst)
-	squares=map(lambda x: math.pow(x-avg, 2), lst) 
-	meanSquares=math.fsum(squares)/len(lst)
-	return math.sqrt(meanSquares)
 
 
 def makeBuckets(data, field, num):
@@ -100,16 +65,6 @@ def getTop(data, fields, n):
 	infoGain.sort(key = lambda x: x[1])
 	return infoGain[0-n:]
 
-def getData():
-	client=pymongo.MongoClient()
-	db = client.weather
-	collection = db.conditions
-	data=[]
-	results=collection.find({})
-	for d in results:
-		# print d.keys()
-		data.append(d)
-	return data
 
 
 
@@ -117,8 +72,8 @@ def getData():
 
 if __name__=="__main__":
 	entropyField="cloudCover"
-
-	data=getData()
+	conn=Connection()
+	data=list(conn.getAllData())
 
 	# print data[0]
 
@@ -153,15 +108,16 @@ if __name__=="__main__":
 	for i in infoGain:
 		print(i)
 	# print getTop(data,fields, 2)
-	normalData=normilize(data, classification)
+	normalData=normalize(data, classification)
 	print("\n\nnormal")
 	infoGain=[]
 	for field in fields:
-		infoGain.append((field, informationGain(normalData, field, classification)))
+		infoGain.append((field, informationGain(normalData["data"], field, classification)))
 
 	infoGain.sort(key = lambda x: x[1])
 	for i in infoGain:
 		print(i)
+
 
 
 
