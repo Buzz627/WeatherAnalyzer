@@ -1,8 +1,10 @@
 from __future__ import division
-from weather import getCurrent
+from weather import getCurrent, getHourData
 from dataFunctions import *
 from mongoConnection import Connection
 import json
+from knnModel import Knn
+from datetime import datetime
 
 
 def getDistance(point1, point2):
@@ -36,6 +38,30 @@ def predict(pos):
 	output+="prediction: {}\n".format(average(list(map(lambda x: x[1]["rating"],distances[:k]))))
 	return output
 
+def predictHour(pos):
+	conditions=getHourData(pos)
+	conn=Connection()
+	model=Knn(conn.getAllData(), "rating")
+	model.trainFull()
+	predictions=[]
+	for i in conditions:
+		normalPoint=normalizePoint(i, model.model["avg"], model.model["sig"])
+		pred={"prediction":model.predict(normalPoint), "time": i["time"]}
+		predictions.append(pred)
+	return predictions
+
+def prettyPrintHour(pos):
+	data=predictHour(pos)
+	result=""
+	for i in data:
+		date=datetime.fromtimestamp(i["time"])
+		result+="{}: {}\n".format(date.strftime("%A: %I %p"), i["prediction"])
+	return result
+
+
+
+
+
 
 
 if __name__=="__main__":
@@ -65,7 +91,7 @@ if __name__=="__main__":
 	distances=[]
 	for d in data:
 		distances.append((getDistance(current, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	for i in range(k*2):
 		print("{:.2f} {}".format(distances[i][0], distances[i][1]["rating"]))
@@ -79,7 +105,7 @@ if __name__=="__main__":
 	distances=[]
 	for d in nData["data"]:
 		distances.append((getDistance(currentNormalized, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	for i in range(k*2):
 		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
@@ -91,8 +117,10 @@ if __name__=="__main__":
 	distances=[]
 	for d in sData["data"]:
 		distances.append((getDistance(currentStandardize, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	for i in range(k*2):
 		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+
+	print(prettyPrintHour(None))

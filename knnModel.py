@@ -31,11 +31,14 @@ class Knn():
 	def train(self):
 		self.model=normalize(self.trainingSet, self.classification)
 
+	def trainFull(self):
+		self.model=normalize(self.data, self.classification)
+
 	def predict(self, point, k=5):
 		distances=[]
 		for d in self.model["data"]:
 			distances.append((getDistance(point, d), d))
-		distances.sort()
+		distances.sort(key=lambda x: x[0])
 		return average(list(map(lambda x: x[1][self.classification],distances[:k])))
 
 	def test(self):

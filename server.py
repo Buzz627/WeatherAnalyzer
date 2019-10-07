@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory, jsonify, request
 from saveWeather import save
 from weather import getCurrent
-from predictKNN import predict
+from predictKNN import predict, prettyPrintHour
 import json
 
 
@@ -36,3 +36,9 @@ def current():
 def predictCurrent():
 	data = request.json
 	return "<pre>{}</pre>".format(predict(data))
+
+@app.route("/predictMulti", methods=['POST'])
+def predictHourly():
+	data = request.json
+	return "<pre>{}</pre>".format(prettyPrintHour(data))
+
