@@ -1,5 +1,5 @@
 from __future__ import division
-from weather import getCurrent, getHourData
+from weather import getCurrent, getHourData, getDailyData
 from dataFunctions import *
 from mongoConnection import Connection
 import json
@@ -58,8 +58,45 @@ def prettyPrintHour(pos):
 		result+="{}: {}\n".format(date.strftime("%A: %I %p"), i["prediction"])
 	return result
 
+def predictDaily(pos):
+	conditions=getDailyData(pos)
+	conn=Connection()
+	model=Knn(conn.getAllData(), "rating")
+	model.trainFull()
+	predictions=[]
+	print(json.dumps(conditions[0], indent=4))
+	for i in conditions:
+		
+		lowPoint=i.copy()
+		highPoint=i.copy()
+		minPoint=i.copy()
+		maxPoint=i.copy()
+		lowPoint["temperature"]=lowPoint["temperatureLow"]
+		highPoint["temperature"]=highPoint["temperatureHigh"]
+		minPoint["temperature"]=lowPoint["temperatureMin"]
+		maxPoint["temperature"]=highPoint["temperatureMax"]
 
+		normalLow=normalizePoint(lowPoint, model.model["avg"], model.model["sig"])
+		normalHigh=normalizePoint(highPoint, model.model["avg"], model.model["sig"])
+		normalMin=normalizePoint(minPoint, model.model["avg"], model.model["sig"])
+		normalMax=normalizePoint(maxPoint, model.model["avg"], model.model["sig"])
+		print(normalLow)
+		pred={"prediction":{}, "time": i["time"]}
+		pred["prediction"]["low"]=model.predict(normalLow)
+		pred["prediction"]["high"]=model.predict(normalHigh)
+		pred["prediction"]["min"]=model.predict(normalMin)
+		pred["prediction"]["max"]=model.predict(normalMax)
+		predictions.append(pred)
+	return predictions
 
+def prettyPrintDaily(pos):
+	data=predictDaily(pos)
+	result=""
+	for i in data:
+		date=datetime.fromtimestamp(i["time"])
+
+		result+="{}: min:{con[min]} low:{con[low]} max:{con[max]} high:{con[high]}\n".format(date.strftime("%A"), con=i["prediction"])
+	return result
 
 
 
@@ -123,4 +160,4 @@ if __name__=="__main__":
 		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
 
-	print(prettyPrintHour(None))
+	print(prettyPrintDaily(None))

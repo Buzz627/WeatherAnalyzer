@@ -31,16 +31,18 @@ def getForcast(loc=None):
 def getCurrent(loc=None):
 	if loc==None:
 		loc=getLocation()
-		
-
+	
 	return getForcast(loc)["currently"]
 
 def getHourData(loc=None):
 	return getForcast(loc)["hourly"]["data"]
 
+def getDailyData(loc=None):
+	return getForcast(loc)["daily"]["data"]
+
 
 if __name__ == "__main__":
-	data=getHourData()
+	data=getDailyData()
 
 	for con in data:
 		print(datetime.fromtimestamp(con["time"]))
