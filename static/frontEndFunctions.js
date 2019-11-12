@@ -22,7 +22,7 @@ function sendRating(pos, num){
 	  "data": JSON.stringify(data)
 	}
 	$.ajax(settings).done(function (response) {
-		output.innerHTML = "<br>"+response
+		output.innerHTML = "<br>"+response.text
 	});
 }
 
@@ -44,6 +44,7 @@ function current(pos, path){
 	}
 
 	$.ajax(settings).done(function (response) {
-		output.innerHTML = response;
+		// console.log(response);
+		output.innerHTML = response.text;
 	});
 }
