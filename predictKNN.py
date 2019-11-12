@@ -24,6 +24,14 @@ def getDistance(point1, point2):
 def predict(pos):
 	current=getCurrent(pos)
 	conn=Connection()
+
+
+	model=Knn(conn.getAllData(), "rating")
+	model.trainFull()
+	normalPoint=normalizePoint(current, model.model["avg"], model.model["sig"])
+	return model.predict(normalPoint)
+
+
 	data=list(conn.getAllData())
 	nData=normalize(data, "rating")
 	currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
@@ -64,7 +72,7 @@ def predictDaily(pos):
 	model=Knn(conn.getAllData(), "rating")
 	model.trainFull()
 	predictions=[]
-	print(json.dumps(conditions[0], indent=4))
+	# print(json.dumps(conditions[0], indent=4))
 	for i in conditions:
 		
 		lowPoint=i.copy()
@@ -76,16 +84,27 @@ def predictDaily(pos):
 		minPoint["temperature"]=lowPoint["temperatureMin"]
 		maxPoint["temperature"]=highPoint["temperatureMax"]
 
+		lowPoint["apparentTemperature"]=lowPoint["apparentTemperatureLow"]
+		highPoint["apparentTemperature"]=highPoint["apparentTemperatureHigh"]
+		minPoint["apparentTemperature"]=lowPoint["apparentTemperatureMin"]
+		maxPoint["apparentTemperature"]=highPoint["apparentTemperatureMax"]
+
 		normalLow=normalizePoint(lowPoint, model.model["avg"], model.model["sig"])
 		normalHigh=normalizePoint(highPoint, model.model["avg"], model.model["sig"])
 		normalMin=normalizePoint(minPoint, model.model["avg"], model.model["sig"])
 		normalMax=normalizePoint(maxPoint, model.model["avg"], model.model["sig"])
-		print(normalLow)
+		print(json.dumps(dict((k, highPoint[k]) for k in normalHigh), indent=4))
+		print(json.dumps(normalHigh, indent=4))
+
 		pred={"prediction":{}, "time": i["time"]}
 		pred["prediction"]["low"]=model.predict(normalLow)
+		print()
 		pred["prediction"]["high"]=model.predict(normalHigh)
+		print()
 		pred["prediction"]["min"]=model.predict(normalMin)
+		print()
 		pred["prediction"]["max"]=model.predict(normalMax)
+		print()
 		predictions.append(pred)
 	return predictions
 
@@ -122,42 +141,91 @@ if __name__=="__main__":
 		'precipProbability': 0, 
 		'icon': 'cloudy'
 	}
-	current=getCurrent()
+	# current=getCurrent()
+	# conn=Connection()
+	# data=list(conn.getAllData())
+	# distances=[]
+	# for d in data:
+	# 	distances.append((getDistance(current, d), d))
+	# distances.sort(key=lambda x: x[0])
+	# k=5
+	# for i in range(k*2):
+	# 	print("{:.2f} {}".format(distances[i][0], distances[i][1]["rating"]))
+	# 	# print(distances[i])
+	# print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+
+
+
+	# nData=normalize(data, "rating")
+	# currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
+	# distances=[]
+	# for d in nData["data"]:
+	# 	distances.append((getDistance(currentNormalized, d), d))
+	# distances.sort(key=lambda x: x[0])
+	# k=5
+	# for i in range(k*2):
+	# 	print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
+	# print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+
+
+	# sData=standardize(data, "rating")
+	# currentStandardize=standardizePoint(current, sData["high"], sData["low"])
+	# distances=[]
+	# for d in sData["data"]:
+	# 	distances.append((getDistance(currentStandardize, d), d))
+	# distances.sort(key=lambda x: x[0])
+	# k=5
+	# for i in range(k*2):
+	# 	print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
+	# print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+	# print(predict(None))
+	# print(prettyPrintDaily(None))
+
+
+
+
+	point1={
+		"uvIndex": 4,
+		"apparentTemperature": 68.8,
+		"humidity": 0.78,
+		"dewPoint": 49.04,
+		"temperature": 69.47,
+		"time": 1571976000,
+		"cloudCover": 0.2,
+		"precipProbability": 0.09,
+		"precipIntensity": 0.0002,
+		"pressure": 1024.82,
+		"ozone": 255.6,
+		"windBearing": 217,
+		"windGust": 11.16,
+		"windSpeed": 2.73,
+		"visibility": 9.705
+	}
+
+	point2={
+		"uvIndex": 2,
+		"apparentTemperature": 68.2,
+		"humidity": 0.52,
+		"dewPoint": 50.14,
+		"temperature": 68.2,
+		"time": 1572031172,
+		"cloudCover": 0,
+		"precipProbability": 0,
+		"precipIntensity": 0,
+		"pressure": 1022.77,
+		"ozone": 256.1,
+		"windBearing": 222,
+		"windGust": 6.31,
+		"windSpeed": 5.34,
+		"visibility": 10,
+	}
+
 	conn=Connection()
-	data=list(conn.getAllData())
-	distances=[]
-	for d in data:
-		distances.append((getDistance(current, d), d))
-	distances.sort(key=lambda x: x[0])
-	k=5
-	for i in range(k*2):
-		print("{:.2f} {}".format(distances[i][0], distances[i][1]["rating"]))
-		# print(distances[i])
-	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
-
-
-
-	nData=normalize(data, "rating")
-	currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
-	distances=[]
-	for d in nData["data"]:
-		distances.append((getDistance(currentNormalized, d), d))
-	distances.sort(key=lambda x: x[0])
-	k=5
-	for i in range(k*2):
-		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
-	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
-
-
-	sData=standardize(data, "rating")
-	currentStandardize=standardizePoint(current, sData["high"], sData["low"])
-	distances=[]
-	for d in sData["data"]:
-		distances.append((getDistance(currentStandardize, d), d))
-	distances.sort(key=lambda x: x[0])
-	k=5
-	for i in range(k*2):
-		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
-	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
-
-	print(prettyPrintDaily(None))
+	model=Knn(conn.getAllData(), "rating")
+	model.trainFull()
+	normalPoint1=normalizePoint(point1, model.model["avg"], model.model["sig"])
+	normalPoint2=normalizePoint(point2, model.model["avg"], model.model["sig"])
+	print(json.dumps(normalPoint2, indent=4))
+	print(json.dumps(normalPoint1, indent=4))
+	print(model.predict(normalPoint1))
+	print(model.predict(normalPoint2))

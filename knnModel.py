@@ -39,6 +39,8 @@ class Knn():
 		for d in self.model["data"]:
 			distances.append((getDistance(point, d), d))
 		distances.sort(key=lambda x: x[0])
+		for i in range(k*2):
+			print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 		return average(list(map(lambda x: x[1][self.classification],distances[:k])))
 
 	def test(self):

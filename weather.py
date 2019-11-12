@@ -18,8 +18,6 @@ def getForcast(loc=None):
 	if loc==None:
 		loc=getLocation()
 		
-		
-
 	apiKey=os.environ["APIKEY"]
 	lat=loc["latitude"]
 	lon=loc["longitude"]
@@ -46,3 +44,15 @@ if __name__ == "__main__":
 
 	for con in data:
 		print(datetime.fromtimestamp(con["time"]))
+
+	data=getForcast()
+	current=data["currently"]
+	hourNow=data["hourly"]["data"][0]
+	for i in current:
+		try:
+			if current[i]!= hourNow[i]:
+				print(i)
+				print(current[i])
+				print(hourNow[i])
+		except:
+			pass
