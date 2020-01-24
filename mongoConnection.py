@@ -14,7 +14,7 @@ class Connection:
 			client=pymongo.MongoClient(username=mongoUser, password=mongoPass)
 		self.client=client
 		db = client.weather
-		self.collection = db.conditions
+		self.collection = db[os.environ["DB_COLLECTION"]]
 
 	def getAllData(self):
 		result=self.collection.find({})

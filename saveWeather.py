@@ -10,16 +10,25 @@ from mongoConnection import Connection
 def save(rating, loc=None):
 	now = datetime.datetime.now()
 
+	currentResult={"result":{}, "meta":{}, "features":{}}
+	condition=getCurrent(loc)
+	currentResult["meta"]={
+		"time":condition["time"], 
+		"location":{
+			"latitude":round(loc["latitude"], 3),
+			"longitude":round(loc["longitude"], 3)}}
+	del condition["time"]
+	currentResult["features"]=condition
 
-	currentResult=getCurrent(loc)
-	currentResult['hour']=now.hour
-	currentResult['month']=now.month
-	currentResult['day']=now.day
+	currentResult["features"]['hour']=now.hour
+	currentResult["features"]['month']=now.month
+	currentResult["features"]['day']=now.day
 
-	currentResult['rating']=rating
+	currentResult["result"]['rating']=rating
+	
 	conn=Connection()
 	conn.insert_one(currentResult)
-	# print(currentResult)
+	# print(json.dumps(currentResult, indent=4))
 	print("saved")
 
 

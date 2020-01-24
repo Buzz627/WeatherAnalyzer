@@ -17,6 +17,7 @@ def getForcast(loc):
 	lat=loc["latitude"]
 	lon=loc["longitude"]
 	print( lat, lon)
+	# print('https://api.darksky.net/forecast/{}/{},{}?exclude=hourly,minutely,daily'.format(apiKey, lat, lon))
 	r = requests.get('https://api.darksky.net/forecast/{}/{},{}?exclude=hourly,minutely,daily'.format(apiKey, lat, lon))
 	result=r.json()
 	return result

@@ -13,6 +13,7 @@ def getDistance(point1, point2):
 			continue
 		try:
 			if key in point2:
+				
 				total+=abs(point1[key]-point2[key])
 		except TypeError as e:
 			continue
@@ -23,6 +24,8 @@ def predict(pos):
 	current=getCurrent(pos)
 	conn=Connection()
 	data=list(conn.getAllData())
+	data=list(map(lambda x: 
+		{**x["features"], **{"rating":x["result"]["rating"]}, **{"_id":x["_id"]}}, data))
 	nData=normalize(data, "rating")
 	currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
 	distances=[]
@@ -62,10 +65,14 @@ if __name__=="__main__":
 	current=getCurrent()
 	conn=Connection()
 	data=list(conn.getAllData())
+
+
+
+	#raw Data
 	distances=[]
 	for d in data:
 		distances.append((getDistance(current, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	for i in range(k*2):
 		print("{:.2f} {}".format(distances[i][0], distances[i][1]["rating"]))
@@ -74,25 +81,31 @@ if __name__=="__main__":
 
 
 
+
+	#normilized Data
 	nData=normalize(data, "rating")
 	currentNormalized=normalizePoint(current, nData["avg"], nData["sig"])
 	distances=[]
 	for d in nData["data"]:
 		distances.append((getDistance(currentNormalized, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	for i in range(k*2):
 		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
 
 
+
+	#standardized data
 	sData=standardize(data, "rating")
 	currentStandardize=standardizePoint(current, sData["high"], sData["low"])
 	distances=[]
 	for d in sData["data"]:
 		distances.append((getDistance(currentStandardize, d), d))
-	distances.sort()
+	distances.sort(key=lambda x: x[0])
 	k=5
 	for i in range(k*2):
 		print("{:.2f} {} {}".format(distances[i][0], distances[i][1]["rating"], distances[i][1]["_id"]))
 	print("prediction:", average(list(map(lambda x: x[1]["rating"],distances[:k]))))
+
+	print(getDistance(current, current))
